@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="data:application/manifest+json,{
+  "name":"AthletePro",
+  "short_name":"AthletePro",
+  "start_url":"/",
+  "display":"standalone",
+  "background_color":"#0f172a",
+  "theme_color":"#f59e0b"
+}">
+<title>AthletePro - Atletismo</title>
+<style>
+  :root{
+    --bg:#0f172a; --card:#1e293b; --accent:#f59e0b; --text:#f1f5f9; --muted:#94a3b8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);padding-bottom:70px}
+  
+  .header{padding:16px;background:var(--card);border-bottom:2px solid var(--accent);position:sticky;top:0;z-index:10}
+  .header h1{font-size:20px;font-weight:800}
+  
+  .tab{display:none;padding:16px}
+  .tab.active{display:block}
+  
+  .card{background:var(--card);border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid #334155}
+  
+  /* Cronómetro */
+  .timer{font-size:64px;font-weight:800;text-align:center;margin:30px 0;color:var(--accent);font-variant-numeric:tabular-nums}
+  .timer-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+  .btn{padding:14px;border:none;border-radius:12px;font-weight:700;font-size:16px;cursor:pointer}
+  .btn-start{background:var(--accent);color:#000}
+  .btn-reset{background:#334155;color:var(--text)}
+  
+  /* Lista de marcas */
+  .mark-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #334155}
+  .mark-event{font-weight:700;font-size:15px}
+  .mark-time{color:var(--accent);font-weight:800;font-size:16px}
+  .mark-date{font-size:12px;color:var(--muted)}
+  
+  /* Atleta */
+  .athlete{display:flex;align-items:center;gap:12px}
+  .athlete img{width:55px;height:55px;border-radius:50%;object-fit:cover}
+  .athlete-name{font-weight:700;font-size:15px}
+  .athlete-info{font-size:13px;color:var(--muted)}
+  
+  /* Evento */
+  .event-card{border-left:4px solid var(--accent)}
+  .event-title{font-weight:700;font-size:16px;margin-bottom:4px}
+  .event-meta{font-size:13px;color:var(--muted)}
+  
+  .navbar{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid #334155;display:flex}
+  .nav-btn{flex:1;padding:12px 0;border:none;background:none;color:var(--muted);font-size:11px;display:flex;flex-direction:column;align-items:center;gap:4px}
+  .nav-btn.active{color:var(--accent)}
+  .nav-btn svg{width:22px;height:22px}
+</style>
+</head>
+<body>
+
+<div class="header"><h1>AthletePro</h1></div>
+
+<!-- CRONÓMETRO -->
+<div id="cronometro" class="tab active">
+  <div class="card">
+    <div class="timer" id="timer">00:00.00</div>
+    <div class="timer-btns">
+      <button class="btn btn-start" id="startBtn" onclick="toggleTimer()">Iniciar</button>
+      <button class="btn btn-reset" onclick="resetTimer()">Reiniciar</button>
+    </div>
+  </div>
+  
+  <h2 style="margin:20px 0 12px;font-size:18px">Mis Mejores Marcas</h2>
+  <div class="card">
+    <div class="mark-item">
+      <div>
+        <div class="mark-event">100m planos</div>
+        <div class="mark-date">15 Oct 2025</div>
+      </div>
+      <div class="mark-time">10.85s</div>
+    </div>
+    <div class="mark-item">
+      <div>
+        <div class="mark-event">400m planos</div>
+        <div class="mark-date">08 Oct 2025</div>
+      </div>
+      <div class="mark-time">49.32s</div>
+    </div>
+    <div class="mark-item">
+      <div>
+        <div class="mark-event">Salto de longitud</div>
+        <div class="mark-date">01 Oct 2025</div>
+      </div>
+      <div class="mark-time">7.12m</div>
+    </div>
+  </div>
+</div>
+
+<!-- ATLETAS -->
+<div id="atletas" class="tab">
+  <h2 style="margin:10px 0 15px;font-size:18px">Atletas Destacados</h2>
+  <div class="card athlete">
+    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200" alt="">
+    <div>
+      <div class="athlete-name">Noah Lyles</div>
+      <div class="athlete-info">100m, 200m • USA • 27 años</div>
+    </div>
+  </div>
+  <div class="card athlete">
+    <img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=200" alt="">
+    <div>
+      <div class="athlete-name">Faith Kipyegon</div>
+      <div class="athlete-info">1500m • Kenia • 30 años</div>
+    </div>
+  </div>
+</div>
+
+<!-- EVENTOS -->
+<div id="eventos" class="tab">
+  <h2 style="margin:10px 0 15px;font-size:18px">Próximos Eventos</h2>
+  <div class="card event-card">
+    <div class="event-title">Campeonato Nacional</div>
+    <div class="event-meta">📍 Estadio Olímpico • 25 Oct 2025</div>
+  </div>
+  <div class="card event-card">
+    <div class="event-title">Mítin de Atletismo</div>
+    <div class="event-meta">📍 Ciudad Deportiva • 02 Nov 2025</div>
+  </div>
+</div>
+
+<!-- PERFIL -->
+<div id="perfil" class="tab">
+  <div class="card" style="text-align:center;padding:30px">
+    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200" style="width:80px;height:80px;border-radius:50%;margin-bottom:12px">
+    <h2 style="margin-bottom:5px">Juan Pérez</h2>
+    <p style="color:var(--muted);margin-bottom:20px">Velocista • Club Atletismo Centro</p>
+    <div style="text-align:left;display:grid;gap:12px">
+      <div style="display:flex;justify-content:space-between"><span>Pruebas:</span><span style="font-weight:700">100m, 200m</span></div>
+      <div style="display:flex;justify-content:space-between"><span>Mejor marca 100m:</span><span style="font-weight:700;color:var(--accent)">10.85s</span></div>
+      <div style="display:flex;justify-content:space-between"><span>Entrenador:</span><span style="font-weight:700">Carlos López</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="navbar">
+  <button class="nav-btn active" onclick="showTab('cronometro')"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M15 1H9v2h6V1zm-4 14h2V8h-2v7zM11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>Cronómetro</button>
+  <button class="nav-btn" onclick="showTab('atletas')"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>Atletas</button>
+  <button class="nav-btn" onclick="showTab('eventos')"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>Eventos</button>
+  <button class="nav-btn" onclick="showTab('perfil')"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4S14.21 4 12 4 8 5.79 8 8s1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>Perfil</button>
+</nav>
+
+<script>
+let timerInterval;
+let startTime;
+let elapsed = 0;
+let running = false;
+
+function formatTime(ms){
+  const totalSeconds = ms / 1000;
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = Math.floor(totalSeconds % 60);
+  const centiseconds = Math.floor((ms % 1000) / 10);
+  return `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}.${String(centiseconds).padStart(2,'0')}`;
+}
+
+function toggleTimer(){
+  const btn = document.getElementById('startBtn');
+  if(!running){
+    startTime = Date.now() - elapsed;
+    timerInterval = setInterval(()=>{
+      elapsed = Date.now() - startTime;
+      document.getElementById('timer').textContent = formatTime(elapsed);
+    }, 10);
+    btn.textContent = 'Pausar';
+    running = true;
+  } else {
+    clearInterval(timerInterval);
+    btn.textContent = 'Iniciar';
+    running = false;
+  }
+}
+
+function resetTimer(){
+  clearInterval(timerInterval);
+  elapsed = 0;
+  running = false;
+  document.getElementById('timer').textContent = '00:00.00';
+  document.getElementById('startBtn').textContent = 'Iniciar';
+}
+
+function showTab(id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+</script>
+</body>
+</html>
